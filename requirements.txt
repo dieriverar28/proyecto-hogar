@@ -1,0 +1,10 @@
+fastapi==0.115.6 //framework para construir APIs
+uvicorn[standard]==0.34.0 //servidor ASGI para ejecutar la aplicación FastAPI
+sqlalchemy==2.0.36 //el ORM ( JPA/Hibernate en Spring Boot)
+psycopg2-binary==2.9.10 //el driver para conectarse a PostgreSQL
+alembic==1.14.0 //maneja las migraciones de base de datos (equivalente a Flyway)
+pydantic==2.10.4 //valida y serializa datos (los "DTOs" de FastAPI, básicamente)
+pydantic-settings==2.7.0 //para manejar variables de entorno de forma tipada
+python-jose[cryptography]==3.3.0 //para JWT y hash de contraseñas (el login)
+passlib[bcrypt]==1.7.4 //para JWT y hash de contraseñas (el login)
+python-multipart==0.0.20 //
