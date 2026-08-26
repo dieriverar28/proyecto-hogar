@@ -11,6 +11,29 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+  api:
+    build: .
+    container_name: inventario-api
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://inventario_user:inventario_pass@db:5432/inventario_db
+      SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - "8000:8000"
 volumes:
   pgdata:
+
+
+#--build: . → en vez de usar una imagen ya publicada (como postgres:16), 
+#le dice a Docker que construya la imagen usando el Dockerfile de la carpeta actual.
+#--depends_on: - db → asegura que Docker intente levantar db antes que api 
+#(ojo: esto solo controla el orden de arranque, no espera a que Postgres esté 
+#cien% listo para aceptar conexiones — a veces hace falta un mecanismo de "retry" en la app, 
+#pero para empezar está bien).
+#--DATABASE_URL: postgresql://...@db:5432/... → aquí sí usamos db como host (no localhost), 
+#porque ahora la API vive dentro de la misma red de Docker que la base de datos, 
+#y puede resolver db como nombre del servicio.
+#--SECRET_KEY: ${SECRET_KEY} → esto lee la variable desde archivo .env 
+#automáticamente (Docker Compose lee .env de la raíz del proyecto por defecto).
