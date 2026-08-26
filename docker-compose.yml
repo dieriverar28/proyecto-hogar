@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
   api:
     build: .
     container_name: inventario-api
@@ -22,10 +23,6 @@ services:
       SECRET_KEY: ${SECRET_KEY}
     ports:
       - "8000:8000"
-volumes:
-  pgdata:
-  prometheus_data:
-  grafana_data:
 
   prometheus:
     image: prom/prometheus:latest
@@ -67,6 +64,10 @@ volumes:
     ports:
       - "8080:8080"
 
+volumes:
+  pgdata:
+  prometheus_data:
+  grafana_data:
 
 #--build: . → en vez de usar una imagen ya publicada (como postgres:16), 
 #le dice a Docker que construya la imagen usando el Dockerfile de la carpeta actual.
