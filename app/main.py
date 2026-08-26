@@ -2,6 +2,7 @@
 # — arranca la aplicación y registra los routers.
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.routers import auth, categoria, ubicacion, producto
 
@@ -18,6 +19,9 @@ app.include_router(categoria.router)
 app.include_router(ubicacion.router)
 app.include_router(producto.router)
 
+# Expone métricas en /metrics automáticamente
+Instrumentator().instrument(app).expose(app)
+
 @app.get("/")
 def root():
     return {"mensaje": "Inventario Hogar API funcionando"}
@@ -29,4 +33,9 @@ version aparecen automáticamente en la documentación Swagger.
  (/auth, /categorias) ya incluidos.
 -@app.get("/") → un endpoint simple de "health check" 
 para verificar rápidamente que la API está viva.
+
+-Instrumentator().instrument(app) → engancha automáticamente un middleware que mide cada request: 
+duración, código de estado, endpoint llamado, etc.
+-.expose(app) → crea un endpoint nuevo, /metrics, que expone esas métricas
+ en el formato que Prometheus espera (texto plano con un formato específico)
 """

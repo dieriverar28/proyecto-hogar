@@ -24,6 +24,48 @@ services:
       - "8000:8000"
 volumes:
   pgdata:
+  prometheus_data:
+  grafana_data:
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
 
 
 #--build: . → en vez de usar una imagen ya publicada (como postgres:16), 
@@ -37,3 +79,10 @@ volumes:
 #y puede resolver db como nombre del servicio.
 #--SECRET_KEY: ${SECRET_KEY} → esto lee la variable desde archivo .env 
 #automáticamente (Docker Compose lee .env de la raíz del proyecto por defecto).
+
+#--Prometheus → cada 15 segundos, "scrapea" (consulta) los endpoints /metrics
+# de la API, node-exporter y cAdvisor, y guarda el historial
+#--Grafana → se conecta a Prometheus como fuente de datos y arma dashboards visuales
+#--node-exporter → expone métricas del sistema operativo del servidor (CPU, RAM, disco, red)
+#--cAdvisor → expone métricas específicas de cada contenedor Docker corriendo 
+#(cuánta RAM/CPU usa cada uno)
