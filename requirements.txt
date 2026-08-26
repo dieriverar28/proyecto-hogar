@@ -13,3 +13,4 @@ email-validator==2.2.0 #para validar emails
 prometheus-fastapi-instrumentator==7.0.0
 
 #link swagger http://127.0.0.1:8000/docs
+#link grafana http://192.168.1.13:3000
