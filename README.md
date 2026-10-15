@@ -1,1 +1,1 @@
--BACKEND correspondiente a app hecha en kotlin "InventarioHogar", hecho para pruebas de servidor casero.
+-BACKEND correspondiente FRONTEND de app "KeepCasa" hecha en kotlin "InventarioHogar", para pruebas de servidor casero.
