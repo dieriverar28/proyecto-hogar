@@ -1,0 +1,1 @@
+-BACKEND correspondiente a app hecha en kotlin "InventarioHogar", hecho para pruebas de servidor casero.
